@@ -10,6 +10,7 @@ setuptools = "*"
 wheel = "*"
 twine = "*"
 bump2version = "*"
+rope = "*"
 
 [packages]
 frozendict = "*"

@@ -5,7 +5,7 @@ from typing import Union
 
 from .CajaFactory import CajaFactory
 from .PathSplitter import PathSplitter
-from . import __DEFAULT_PATH_SPLITTER__
+from . import DefaultPathSplitter
 
 __CAJA_AGGREGATED_TRAIT__ = Collection
 __META__ = type('Meta', (CajaFactory, type(__CAJA_AGGREGATED_TRAIT__)), {})
@@ -14,7 +14,7 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
 
     def __init__(self,
                  content: Union[type(None), __CAJA_AGGREGATED_TRAIT__]=None,
-                 path_splitter: PathSplitter=__DEFAULT_PATH_SPLITTER__()):
+                 path_splitter: PathSplitter=DefaultPathSplitter()):
         self.path_splitter = path_splitter
         self.content = content
 
