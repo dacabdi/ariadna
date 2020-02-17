@@ -1,0 +1,44 @@
+name: Publish
+
+on:
+  release:
+    types: [created]
+
+env:
+  PIPENV_VENV_IN_PROJECT: 1
+
+jobs:
+
+  publish:
+    name: PyPI
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.7]
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      - name: 'Checkout repository'
+        uses: actions/checkout@v2
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Prepare environment
+        run: |
+          pip install pipenv
+          pipenv --where --venv --py --envs --support install --three --dev
+
+      - name: Build package distribution
+        run: |
+          pipenv run python setup.py sdist bdist_wheel
+
+      - name: Publish distribution to PyPI
+        env:
+          TWINE_USERNAME: ${{ secrets.pypi_username }}
+          TWINE_PASSWORD: ${{ secrets.pypi_password }}
+        run: |
+          pipenv run twine upload dist/* --verbose

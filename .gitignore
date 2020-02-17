@@ -1,0 +1,10 @@
+.venv/
+.vscode/
+__pycache__/
+dist/
+ariadna.egg-info/
+build/
+
+Pipfile.lock
+scraps.txt
+example.py
