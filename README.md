@@ -38,4 +38,5 @@ configuration = Caja({
 # now the values can be accessed using
 print(configuration['clients.0.addresses.1.city']) # == Miami
 print(configuration['clients/0/phone/1']) # == 1-404-NOT-REAL
+
 ```
