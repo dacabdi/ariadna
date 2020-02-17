@@ -6,7 +6,7 @@ with open('README.md', 'r') as fh:
 setup(
     name = 'ariadna',
     packages = ['ariadna'],
-    version = '0.7.0b',
+    version = '0.0.1b',
     license = 'MIT',
     description = 'A library of featureful collection objects providing path-like keys',
     long_description = long_description,
@@ -14,7 +14,7 @@ setup(
     author = 'David Cabrera',
     author_email = 'dacabdi@gmail.com',
     url = 'https://github.com/dacabdi/ariadna',
-    download_url = 'https://github.com/dacabdi/ariadna/archive/v0.5.2b.tar.gz',
+    download_url = 'https://github.com/dacabdi/ariadna/archive/v0.0.1b.tar.gz',
     keywords = [
       'caja',
       'dict',
