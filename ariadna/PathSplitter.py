@@ -4,10 +4,10 @@ import re
 DEFAULT_REGEX_KEY_DELIMITER = re.compile(r'[\.-/]')
 DEFAULT_STRING_KEY_DELIMITER = '.'
 
-class PathSplitter(object):
+class PathSplitter:
 
     def __init__(self, splitter):
-        self.splitter = splitter 
+        self.splitter = splitter
 
     def split(self, string):
         if isinstance(string, str):
@@ -21,7 +21,7 @@ class PathSplitter(object):
         start, end = range_pair
         length = end - start
         return string[:start], string[start+length:]
-    
+
     def __call__(self, string):
         return self.split(string)
 
@@ -40,6 +40,7 @@ class RegexSplitter(PathSplitter):
             start = match.start()
             end = match.end()
             return start, end
+        return None
 
 class StringSplitter(PathSplitter):
 
@@ -51,3 +52,4 @@ class StringSplitter(PathSplitter):
         if start != -1:
             end = start + len(self.splitter)
             return start, end
+        return None

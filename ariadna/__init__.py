@@ -2,6 +2,7 @@
 
 from .PathSplitter import PathSplitter
 from .PathSplitter import RegexSplitter
+DefaultPathSplitter = RegexSplitter
 
 from .Caja import Caja
 from .CajaMapping import CajaMapping
@@ -10,8 +11,6 @@ from .CajaMutableSequence import CajaMutableSequence
 from .CajaMutableSet import CajaMutableSet
 from .CajaSequence import CajaSequence
 from .CajaSet import CajaSet
-
-DefaultPathSplitter = RegexSplitter
 DefaultNoneCaja = CajaMutableMapping
 
 __cajas__ = [

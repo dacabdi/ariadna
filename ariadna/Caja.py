@@ -1,4 +1,6 @@
-from abc import ABCMeta, abstractmethod
+"""Caja base type for ariadna library"""
+
+from abc import abstractmethod
 from collections.abc import Collection, Iterator
 
 from typing import Union
@@ -48,7 +50,7 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
         # if collection under key, wrap it
         if isinstance(self._content_[left], Collection) \
         and type(self._content_[left]) not in type(self.__class__).exceptions:
-                self._content_[left] = Caja(self._content_[left])
+            self._content_[left] = Caja(self._content_[left])
         # assign
         if right:
             self._content_[left][right] = value
