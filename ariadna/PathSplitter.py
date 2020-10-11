@@ -1,3 +1,5 @@
+"""Object tree path splitter types"""
+
 from abc import abstractmethod
 import re
 
@@ -5,6 +7,7 @@ DEFAULT_REGEX_KEY_DELIMITER = re.compile(r'[\.-/]')
 DEFAULT_STRING_KEY_DELIMITER = '.'
 
 class PathSplitter:
+    """Object tree path splitter base class"""
 
     def __init__(self, splitter):
         self.splitter = splitter
@@ -20,7 +23,7 @@ class PathSplitter:
     def _split(range_pair, string):
         start, end = range_pair
         length = end - start
-        return string[:start], string[start+length:]
+        return string[:start], string[start + length:]
 
     def __call__(self, string):
         return self.split(string)
@@ -29,7 +32,9 @@ class PathSplitter:
     def range(self, string):
         pass
 
-class RegexSplitter(PathSplitter):
+
+class RegexPathSplitter(PathSplitter):
+    """Object tree path splitter based on regular expressions"""
 
     def __init__(self, splitter=DEFAULT_REGEX_KEY_DELIMITER):
         super().__init__(splitter)
@@ -42,7 +47,9 @@ class RegexSplitter(PathSplitter):
             return start, end
         return None
 
+
 class StringSplitter(PathSplitter):
+    """Object tree path splitter based on string matching"""
 
     def __init__(self, splitter=DEFAULT_STRING_KEY_DELIMITER):
         super().__init__(splitter)
@@ -53,3 +60,5 @@ class StringSplitter(PathSplitter):
             end = start + len(self.splitter)
             return start, end
         return None
+
+DefaultPathSplitter = RegexPathSplitter()

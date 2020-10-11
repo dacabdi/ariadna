@@ -1,12 +1,16 @@
+"""Caja decorator for immutable sets"""
+
 from collections.abc import Set
 from .Caja import Caja
 
-__CAJA_BASE__ = Caja
-__CAJA_AGGREGATED_TRAIT__ = Set
-__META__ = type('Meta', (type(__CAJA_BASE__), type(__CAJA_AGGREGATED_TRAIT__)), {})
+CajaBase = Caja
+CajaAggregatedTrait = Set
+CajaMeta = type('Meta', (type(CajaBase), type(CajaAggregatedTrait)), {})
 
-class CajaSet(__CAJA_BASE__, __CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
+
+class CajaSet(CajaBase, CajaAggregatedTrait, metaclass=CajaMeta):
+    """Caja decorator for immutable sets"""
 
     @classmethod
-    def _default_content(self):
+    def _default_content(cls):
         return frozenset()

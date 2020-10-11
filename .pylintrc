@@ -30,7 +30,7 @@ bad-names=foo,
           toto,
           tutu,
           tata
-          
+
 good-names=i,
            j,
            k,
@@ -67,7 +67,7 @@ single-line-if-stmt=no
 
 [LOGGING]
 
-logging-format-style=fstr
+logging-format-style=new
 logging-modules=logging
 
 [MISCELLANEOUS]

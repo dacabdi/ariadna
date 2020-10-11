@@ -1,4 +1,4 @@
-"""Caja base type for ariadna library"""
+"""Caja base type"""
 
 from abc import abstractmethod
 from collections.abc import Collection, Iterator
@@ -6,17 +6,17 @@ from collections.abc import Collection, Iterator
 from typing import Union
 
 from .CajaFactory import CajaFactory
-from .PathSplitter import PathSplitter
-from . import DefaultPathSplitter
+from .PathSplitter import PathSplitter, DefaultPathSplitter
 
-__CAJA_AGGREGATED_TRAIT__ = Collection
-__META__ = type('Meta', (CajaFactory, type(__CAJA_AGGREGATED_TRAIT__)), {})
+CajaAggregatedTrait = Collection
+CajaMeta = type('Meta', (CajaFactory, type(CajaAggregatedTrait)), {})
 
-class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
+class Caja(CajaAggregatedTrait, metaclass=CajaMeta):
+    """Caja base type"""
 
     def __init__(self,
-                 content: Union[type(None), __CAJA_AGGREGATED_TRAIT__]=None,
-                 path_splitter: PathSplitter=DefaultPathSplitter()):
+                 content: Union[type(None), CajaAggregatedTrait] = None,
+                 path_splitter: PathSplitter = DefaultPathSplitter):
         self.path_splitter = path_splitter
         self.content = content
 
@@ -34,7 +34,7 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
         value = self._content_[left]
         # if retrieved value is collection, wrap it
         if isinstance(value, Collection) \
-        and type(value) not in type(self.__class__).exceptions:
+                and type(value) not in type(self.__class__).exceptions:
             value = Caja(value)
         # return item directly or recurse if not leaf
         return value if right is None else value[right]
@@ -43,13 +43,13 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
     def _assign_item(self, key, value):
         left, right = self._split_key(key)
         # if key does not exist, create it
-        try: 
+        try:
             _ = self._content_[left]
-        except LookupError: 
+        except LookupError:
             self._content_[left] = Caja(None)
         # if collection under key, wrap it
         if isinstance(self._content_[left], Collection) \
-        and type(self._content_[left]) not in type(self.__class__).exceptions:
+                and type(self._content_[left]) not in type(self.__class__).exceptions:
             self._content_[left] = Caja(self._content_[left])
         # assign
         if right:
@@ -59,6 +59,8 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
 
     # resolve lookup exceptions to a fallback value
     def safe_get(self, key, fallback=None):
+        """Retrieves the value corresponding to the provided key.
+        Returns the fallback value if the key is missing."""
         try:
             return self[key]
         except LookupError:
@@ -73,17 +75,16 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
         else:
             # if collection under key, wrap it
             if isinstance(self._content_[left], Collection) \
-            and type(self._content_[left]) not in type(self.__class__).exceptions:
-                    self._content_[left] = Caja(self._content_[left])
+                    and type(self._content_[left]) not in type(self.__class__).exceptions:
+                self._content_[left] = Caja(self._content_[left])
             # then attempt
             del self._content_[left][right]
 
     # operators
 
     def __eq__(self, other):
-        # TODO improve
         if isinstance(other, Caja):
-            if self.path_splitter != other.path_splitter: 
+            if self.path_splitter != other.path_splitter:
                 return False
             other = other.content
         return self.content == other
@@ -100,10 +101,10 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
     # abc interface
 
     def __getitem__(self, key):
-        # TODO improve
-        try: return self._resolve_item(key)
-        except Exception as e: 
-            raise LookupError(f'Failed to retrieve \'{key}\'') from e
+        try:
+            return self._resolve_item(key)
+        except Exception as exception:
+            raise LookupError(f'Failed to retrieve \'{key}\'') from exception
 
     def __contains__(self, value) -> bool:
         return self._content_.__contains__(value)
@@ -118,8 +119,9 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
 
     @property
     def content(self):
-        raise NotImplementedError
-    
+        """Internal collection decorated by Caja"""
+        raise AttributeError("the 'content' property cannot be accessed directly")
+
     @content.setter
     def content(self, content):
         if content is None:
@@ -128,9 +130,13 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
             meta = type(self)
             content_traits = meta.trait_filters(type(content))
             self_traits = meta.trait_filters(self.__class__)
-            if meta.trait_match(content_traits, self_traits) and type(content) not in meta.exceptions:
-                self._content_ = content if not isinstance(content, Caja) else content._content_
-            else: raise TypeError(f'{type(self)} cannot wrap content of type {type(content)}')
+            if meta.trait_match(content_traits, self_traits) and type(
+                    content) not in meta.exceptions:
+                self._content_ = content if not isinstance(
+                    content, Caja) else content._content_
+            else:
+                raise TypeError(
+                    f'{type(self)} cannot wrap content of type {type(content)}')
 
     @content.deleter
     def content(self):
@@ -138,7 +144,7 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
 
     @classmethod
     @abstractmethod
-    def _default_content(self):
+    def _default_content(cls):
         pass
 
     # path_splitter
@@ -150,9 +156,11 @@ class Caja(__CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
     @path_splitter.setter
     def path_splitter(self, path_splitter: PathSplitter) -> None:
         if not isinstance(path_splitter, PathSplitter):
-            raise TypeError('path_splitter must be an instance of PathSplitter')
+            raise TypeError(
+                'path_splitter must be an instance of PathSplitter')
         self._path_splitter_ = path_splitter
 
+    @classmethod
     @path_splitter.deleter
-    def path_splitter(self) -> None:
+    def path_splitter(cls) -> None:
         raise AttributeError('path_splitter attribute cannot be deleted')

@@ -1,30 +1,34 @@
+"""Caja decorator for immutable sequences"""
+
 from collections.abc import Sequence, Iterator
 from .Caja import Caja
 
-__CAJA_BASE__ = Caja
-__CAJA_AGGREGATED_TRAIT__ = Sequence
-__META__ = type('Meta', (type(__CAJA_BASE__), type(__CAJA_AGGREGATED_TRAIT__)), {})
+CajaBase = Caja
+CajaAggregatedTrait = Sequence
+CajaMeta = type('Meta', (type(CajaBase), type(CajaAggregatedTrait)), {})
 
-class CajaSequence(__CAJA_BASE__, __CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
-    
+
+class CajaSequence(CajaBase, CajaAggregatedTrait, metaclass=CajaMeta):
+    """Caja decorator for immutable sequences"""
+
     @classmethod
-    def _default_content(self) -> Sequence:
+    def _default_content(cls) -> Sequence:
         return tuple()
 
-    @__CAJA_BASE__.content.getter
+    @CajaBase.content.getter
     def content(self) -> Sequence:
         return type(self._content_)([
             item.content() if isinstance(item, Caja) else item
             for item in self._content_
         ])
-    
+
     def _split_key(self, key) -> tuple:
         right = None
-        if type(key) is slice or type(key) is int:
+        if isinstance(key, (slice, int)):
             left = key
         else:
             left, right = self.path_splitter(key)
-            try: 
+            try:
                 left = int(left)
             except ValueError:
                 left = self._parse_splice(left)
@@ -33,8 +37,8 @@ class CajaSequence(__CAJA_BASE__, __CAJA_AGGREGATED_TRAIT__, metaclass=__META__)
     def _parse_splice(self, splice_str: str) -> slice:
         parts = splice_str.split(':')
         start = int(parts[0]) if parts[0] else None
-        stop  = int(parts[1]) if parts[1] else None
-        step  = int(parts[2]) if len(parts) == 3 and parts[2] else None
+        stop = int(parts[1]) if parts[1] else None
+        step = int(parts[2]) if len(parts) == 3 and parts[2] else None
         return slice(start, stop, step)
 
     # mixin methods

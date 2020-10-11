@@ -1,4 +1,4 @@
-""" Setup ariadna module """
+""" Setup Ariadna module """
 
 from setuptools import setup
 
@@ -6,8 +6,8 @@ with open('README.md', 'r') as fh:
     LONG_DESCRIPTION = fh.read()
 
 setup(
-    name='ariadna',
-    packages=['ariadna'],
+    name='Ariadna',
+    packages=['Ariadna'],
     version='0.0.2b',
     license='MIT',
     description='A library of featureful collection objects providing path-like keys',

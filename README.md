@@ -1,11 +1,11 @@
-# ariadna #
+# Ariadna #
 
 A featureful map object that can take path-like keys to access nested keys or attributes.
 
 ## Examples ##
 
 ```python
-from ariadna import Caja
+from Ariadna import Caja
 
 configuration = Caja({
     'clients' : [

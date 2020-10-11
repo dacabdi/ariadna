@@ -1,24 +1,26 @@
 import unittest
 import traceback
 from frozendict import frozendict
-from ariadna import Caja,                   \
-                    CajaMapping,            \
-                    CajaMutableMapping,     \
-                    CajaMutableSequence,    \
-                    CajaMutableSet,         \
-                    CajaSequence,           \
-                    CajaSet                 \
+from Ariadna import Caja,                   \
+    CajaMapping,            \
+    CajaMutableMapping,     \
+    CajaMutableSequence,    \
+    CajaMutableSet,         \
+    CajaSequence,           \
+    CajaSet                 \
+
+
 
 class TestUnitCajaTyping(unittest.TestCase):
 
     def setUp(self):
         self.types = {
-            CajaMapping : [frozendict(), frozendict({'key':'string_val','nested':{'list':[1,2,3]}})],
-            CajaMutableMapping : [None, dict(), dict({'key':'str','nested':{'list':[1.2, 1.5]}})],
-            CajaMutableSequence : [list(), [1,2,3]],
-            CajaMutableSet : [set(), set([1,2,3])],
-            CajaSequence : [tuple(('a', 1, 5.4, TypeError))],
-            CajaSet : [frozenset(), frozenset([1,2,3])]
+            CajaMapping: [frozendict(), frozendict({'key': 'string_val', 'nested': {'list': [1, 2, 3]}})],
+            CajaMutableMapping: [None, dict(), dict({'key': 'str', 'nested': {'list': [1.2, 1.5]}})],
+            CajaMutableSequence: [list(), [1, 2, 3]],
+            CajaMutableSet: [set(), set([1, 2, 3])],
+            CajaSequence: [tuple(('a', 1, 5.4, TypeError))],
+            CajaSet: [frozenset(), frozenset([1, 2, 3])]
         }
         self.non_container = (
             1,
@@ -69,14 +71,15 @@ class TestUnitCajaTyping(unittest.TestCase):
     def test_unit_caja_types_negative_collections(self):
         caja_types = self.types.keys()
         for caja_type in caja_types:
-            for wrapped_instance_list in [self.types[ct] for ct in (self.types.keys() - [caja_type])]:
+            for wrapped_instance_list in [self.types[ct]
+                                          for ct in (self.types.keys() - [caja_type])]:
                 for wrapped_instance in wrapped_instance_list:
                     msg = f'{caja_type} should not wrap type {type(wrapped_instance)}'
                     with self.subTest(msg=msg, caja_type=caja_type, wrapped_instance=wrapped_instance):
                         if wrapped_instance is not None:
-                             with self.assertRaises(TypeError):
+                            with self.assertRaises(TypeError):
                                 _ = caja_type(wrapped_instance)
-    
+
     def test_unit_caja_types_negative_non_container(self):
         for caja_type in self.types.keys():
             for wrapped_instance in self.non_container:

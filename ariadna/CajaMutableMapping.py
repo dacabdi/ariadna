@@ -1,20 +1,24 @@
-from .CajaMapping import CajaMapping
+"""Caja decorator for mutable mapping structures"""
+
 from collections.abc import MutableMapping, Hashable
+from .CajaMapping import CajaMapping
 
-__CAJA_BASE__ = CajaMapping
-__CAJA_AGGREGATED_TRAIT__ = MutableMapping
-__META__ = type('Meta', (type(__CAJA_BASE__), type(__CAJA_AGGREGATED_TRAIT__)), {})
+CajaBase = CajaMapping
+CajaAggregatedTrait = MutableMapping
+CajaMeta = type('Meta', (type(CajaBase), type(CajaAggregatedTrait)), {})
 
-class CajaMutableMapping(__CAJA_BASE__, __CAJA_AGGREGATED_TRAIT__, metaclass=__META__):
+
+class CajaMutableMapping(CajaBase, CajaAggregatedTrait, metaclass=CajaMeta):
+    """Caja decorator for mutable mapping structures"""
 
     @classmethod
-    def _default_content(self) -> MutableMapping:
+    def _default_content(cls) -> MutableMapping:
         return dict()
 
     # abc interface
 
-    def __setitem__(self, key : Hashable, value) -> None:
+    def __setitem__(self, key: Hashable, value) -> None:
         self._assign_item(key, value)
-        
-    def __delitem__(self, key : Hashable) -> None:
+
+    def __delitem__(self, key: Hashable) -> None:
         self._del_item(key)

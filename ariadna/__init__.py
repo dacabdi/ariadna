@@ -1,16 +1,17 @@
 """Library of maps and collections that support full paths as keys"""
 
 from .PathSplitter import PathSplitter
-from .PathSplitter import RegexSplitter
-DefaultPathSplitter = RegexSplitter
+from .PathSplitter import RegexPathSplitter
+from .PathSplitter import DefaultPathSplitter
 
 from .Caja import Caja
-from .CajaMapping import CajaMapping
-from .CajaMutableMapping import CajaMutableMapping
-from .CajaMutableSequence import CajaMutableSequence
-from .CajaMutableSet import CajaMutableSet
-from .CajaSequence import CajaSequence
 from .CajaSet import CajaSet
+from .CajaSequence import CajaSequence
+from .CajaMutableSet import CajaMutableSet
+from .CajaMutableSequence import CajaMutableSequence
+from .CajaMutableMapping import CajaMutableMapping
+from .CajaMapping import CajaMapping
+
 DefaultNoneCaja = CajaMutableMapping
 
 __cajas__ = [
@@ -23,4 +24,4 @@ __cajas__ = [
     'CajaSet'
 ]
 
-__all__ = __cajas__ + ['PathSplitter', 'RegexSplitter']
+__all__ = __cajas__ + ['PathSplitter', 'RegexPathSplitter']

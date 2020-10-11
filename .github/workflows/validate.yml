@@ -63,4 +63,4 @@ jobs:
           pipenv --where --venv --py --envs --support install --three --dev
 
       - name: 'Run linter (pylint)'
-        run: pipenv run pylint ariadna
+        run: pipenv run pylint Ariadna

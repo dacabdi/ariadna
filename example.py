@@ -1,4 +1,4 @@
-from ariadne import Caja
+from Ariadna import Caja
 
 configuration = Caja({
     'clients' : [
